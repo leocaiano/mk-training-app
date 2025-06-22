@@ -6,6 +6,15 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Helper function to get current user
+const getCurrentUser = async () => {
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error || !user) {
+    throw new Error('Usuário não autenticado');
+  }
+  return user;
+};
+
 // Students Services
 export const studentsService = {
   async getAll(): Promise<Student[]> {
@@ -29,10 +38,12 @@ export const studentsService = {
     return data;
   },
 
-  async create(student: Omit<Student, 'id' | 'created_at' | 'updated_at'>): Promise<Student> {
+  async create(student: Omit<Student, 'id' | 'created_at' | 'updated_at' | 'user_id'>): Promise<Student> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('students')
-      .insert([student])
+      .insert([{ ...student, user_id: user.id }])
       .select()
       .single();
     
@@ -85,10 +96,12 @@ export const exercisesService = {
     return data || [];
   },
 
-  async create(exercise: Omit<Exercise, 'id' | 'created_at'>): Promise<Exercise> {
+  async create(exercise: Omit<Exercise, 'id' | 'created_at' | 'user_id'>): Promise<Exercise> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('exercises')
-      .insert([exercise])
+      .insert([{ ...exercise, user_id: user.id }])
       .select()
       .single();
     
@@ -230,6 +243,7 @@ export const progressPhotosService = {
   },
 
   async upload(file: File, studentId: string, type: 'front' | 'back' | 'side'): Promise<ProgressPhoto> {
+    const user = await getCurrentUser();
     const fileExt = file.name.split('.').pop();
     const fileName = `${studentId}/${Date.now()}.${fileExt}`;
     
@@ -261,6 +275,29 @@ export const progressPhotosService = {
   },
 
   async delete(id: string): Promise<void> {
+    // First get the photo to delete the file from storage
+    const { data: photo, error: fetchError } = await supabase
+      .from('progress_photos')
+      .select('url')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    // Extract file path from URL
+    if (photo?.url) {
+      const urlParts = photo.url.split('/');
+      const fileName = urlParts[urlParts.length - 1];
+      const studentId = urlParts[urlParts.length - 2];
+      const filePath = `${studentId}/${fileName}`;
+
+      // Delete from storage
+      await supabase.storage
+        .from('progress-photos')
+        .remove([filePath]);
+    }
+
+    // Delete from database
     const { error } = await supabase
       .from('progress_photos')
       .delete()
