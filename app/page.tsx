@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { Users, Plus, Search, Dumbbell, Scale, Edit, Trash2, Phone, Mail, Target, Calendar } from 'lucide-react';
-import { useStudents } from '../hooks/useSupabase';
-import StudentModal from '../components/StudentModal';
-import ExercisesPage from '../components/ExercisesPage';
-import AssessmentPage from '../components/AssessmentPage';
-import { Student, StudentFormData } from '../lib/types';
+import { useStudents } from './hooks/useSupabase';
+import StudentModal from './components/StudentModal';
+import ExercisesPage from './components/ExercisesPage';
+import AssessmentPage from './components/AssessmentPage';
+import { Student, StudentFormData } from './lib/types';
 
 export default function Home() {
   const { students, loading, error, createStudent, updateStudent, deleteStudent } = useStudents();
