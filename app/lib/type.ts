@@ -8,6 +8,7 @@ export interface Student {
   weight: number;
   goal: string;
   plan: string;
+  user_id: string; // Novo campo para autenticação
   created_at: string;
   updated_at: string;
 }
@@ -19,6 +20,7 @@ export interface Exercise {
   equipment: string;
   instructions: string;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
+  user_id?: string; // Opcional - null para exercícios públicos
   created_at: string;
 }
 
@@ -72,6 +74,26 @@ export interface ProgressPhoto {
   created_at: string;
 }
 
-export type StudentFormData = Omit<Student, 'id' | 'created_at' | 'updated_at'>;
-export type ExerciseFormData = Omit<Exercise, 'id' | 'created_at'>;
+// Form Data Types (sem campos de sistema)
+export type StudentFormData = Omit<Student, 'id' | 'created_at' | 'updated_at' | 'user_id'>;
+export type ExerciseFormData = Omit<Exercise, 'id' | 'created_at' | 'user_id'>;
 export type AssessmentFormData = Omit<Assessment, 'id' | 'created_at'>;
+
+// User types para autenticação
+export interface AuthUser {
+  id: string;
+  email?: string;
+  user_metadata?: {
+    name?: string;
+    [key: string]: any;
+  };
+}
+
+export interface AuthContextType {
+  user: AuthUser | null;
+  loading: boolean;
+  signUp: (email: string, password: string, metadata?: any) => Promise<{ user: AuthUser | null; error: any }>;
+  signIn: (email: string, password: string) => Promise<{ user: AuthUser | null; error: any }>;
+  signOut: () => Promise<{ error: any }>;
+  resetPassword: (email: string) => Promise<{ error: any }>;
+}
