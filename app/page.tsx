@@ -5,185 +5,24 @@ import {
   Home, Users, Key, Activity, Dumbbell, Zap, Trophy, 
   MessageCircle, DollarSign, BarChart3, Sun, Moon, 
   Search, Plus, Edit, Trash2, Bell, TrendingUp, TrendingDown, 
-  Target, Clock, Award, Settings, User
+  Target, Clock, Award, Settings, User, Loader2
 } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-// Dados simulados (em produção virão do Supabase)
-const mockData = {
-  students: [
-    {
-      id: 1,
-      name: "Mayara Kerr",
-      email: "maykerr@gmail.com",
-      phone: "+55 21 99772-0770",
-      age: 34,
-      photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-      level: "Avançado",
-      weight: 64.8,
-      height: 165,
-      imc: 23.8,
-      imcStatus: "Normal",
-      goals: ["Perda de peso", "Ganho de massa muscular", "Fortalecimento"],
-      observations: "Linda e cheirosa!",
-      workouts: "A",
-      active: true,
-      hasPortalAccess: true,
-      lastLogin: "2024-06-20",
-      paymentStatus: "Em dia"
-    },
-    {
-      id: 2,
-      name: "Mary Jane",
-      email: "leocaiano@gmail.com", 
-      phone: "552199846300906",
-      age: 41,
-      photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-      level: "Intermediário",
-      weight: 70.0,
-      height: 170,
-      imc: 24.2,
-      imcStatus: "Normal",
-      goals: ["Resistência", "Resistência cardiovascular", "Flexibilidade"],
-      observations: "Dor lombar",
-      workouts: "3",
-      active: true,
-      hasPortalAccess: true,
-      lastLogin: "2024-06-19",
-      paymentStatus: "Em dia"
-    },
-    {
-      id: 3,
-      name: "Bailarina Capuccina",
-      email: "capuccina@gmail.com",
-      phone: "+55 21 99999-9999", 
-      age: 57,
-      photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
-      level: "Atleta",
-      weight: 60.0,
-      height: 158,
-      imc: 24.0,
-      imcStatus: "Normal",
-      goals: ["Condicionamento geral", "Preparação para competição", "Reabilitação"],
-      observations: "Tung Tung Tung Sahur",
-      workouts: "Nenhum treino criado",
-      active: true,
-      hasPortalAccess: false,
-      lastLogin: "Nunca",
-      paymentStatus: "Em dia"
-    },
-    {
-      id: 4,
-      name: "Aluna Teste 2",
-      email: "alunateste2@gmail.com",
-      phone: "+55 21 99999-9999",
-      age: 28,
-      photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face",
-      level: "Iniciante",
-      weight: 58.0,
-      height: 162,
-      imc: 22.1,
-      imcStatus: "Normal",
-      goals: ["Condicionamento geral", "Flexibilidade", "Fortalecimento"],
-      observations: "teste 1",
-      workouts: "Nenhum treino criado",
-      active: true,
-      hasPortalAccess: true,
-      lastLogin: "2024-06-21",
-      paymentStatus: "Pendente"
-    }
-  ],
-  exercises: [
-    {
-      id: 1,
-      name: "Supino Reto",
-      group: "Peito",
-      level: "Intermediário",
-      equipment: "Halter",
-      description: "Deite-se em um banco reto, segurando um halter em cada mão. Deite-se com os halteres nos lados dos ombros, palmas das mãos voltadas para a frente e empurre-os para cima até que os braços estejam completamente estendidos acima do peito. Segure por um momento e, lentamente, abaixe de volta à posição inicial.",
-      videoUrl: "https://www.youtube.com/watch?v=demo1"
-    },
-    {
-      id: 2, 
-      name: "Puxada pela Frente",
-      group: "Costas",
-      level: "Iniciante",
-      equipment: "Máquina",
-      description: "Sente-se na máquina de puxada, segure a barra com pegada pronada e puxe em direção ao peito.",
-      videoUrl: "https://www.youtube.com/watch?v=demo2"
-    }
-  ],
-  advancedMethods: [
-    {
-      id: 1,
-      name: "Progressão de Carga",
-      category: "Progressão",
-      icon: "📈",
-      description: "Começa leve até chegar ao limite.",
-      videoUrl: "https://youtu.be/hQZGphah7SE"
-    },
-    {
-      id: 2,
-      name: "Drop Set Reverso", 
-      category: "Intensidade",
-      icon: "⚡",
-      description: "Técnica de intensificação progressiva.",
-      videoUrl: "https://youtu.be/example"
-    }
-  ],
-  workoutTemplates: [
-    {
-      id: 1,
-      name: "A - Peito, Ombro e Tríceps",
-      category: "Força",
-      difficulty: "Iniciante", 
-      duration: "60min",
-      exercises: 6,
-      tags: ["academia", "push", "peito", "+2"]
-    },
-    {
-      id: 2,
-      name: "B - Pernas",
-      category: "Força",
-      difficulty: "Iniciante",
-      duration: "60min", 
-      exercises: 2,
-      tags: ["academia", "pernas"]
-    }
-  ]
-};
-
-// Dados para gráficos
-const evolutionData = [
-  { date: '14/06', weight: 65.0, imc: 23.9 },
-  { date: '15/06', weight: 64.8, imc: 23.8 },
-  { date: '16/06', weight: 64.5, imc: 23.7 },
-  { date: '17/06', weight: 64.2, imc: 23.6 },
-  { date: '18/06', weight: 64.0, imc: 23.5 },
-  { date: '19/06', weight: 63.8, imc: 23.4 },
-  { date: '20/06', weight: 63.5, imc: 23.3 }
-];
-
-const revenueData = [
-  { month: 'Jan', planilha: 150, online: 200, presencial: 180 },
-  { month: 'Fev', planilha: 180, online: 220, presencial: 200 },
-  { month: 'Mar', planilha: 200, online: 250, presencial: 220 },
-  { month: 'Abr', planilha: 220, online: 280, presencial: 240 },
-  { month: 'Mai', planilha: 240, online: 300, presencial: 260 },
-  { month: 'Jun', planilha: 260, online: 320, presencial: 280 }
-];
-
-const pieData = [
-  { name: 'Presencial', value: 45, color: '#ec4899' },
-  { name: 'Online', value: 35, color: '#8b5cf6' },
-  { name: 'Planilha', value: 20, color: '#06b6d4' }
-];
+// Importar os hooks do Supabase
+import { 
+  useStudents, 
+  useStudentActions,
+  useDashboardMetrics, 
+  useRevenueEvolution, 
+  useServiceDistribution,
+  useToast 
+} from '../hooks/useSupabase';
 
 export default function PersonalTrainerApp() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [darkMode, setDarkMode] = useState(false);
-  const [students, setStudents] = useState(mockData.students);
-  const [searchTerm, setSearchTerm] = useState('');
+  const { toast, showToast, hideToast } = useToast();
 
   // Toggle dark mode
   const toggleDarkMode = () => {
@@ -255,146 +94,226 @@ export default function PersonalTrainerApp() {
     }
   };
 
-  // Dashboard Component
-  const Dashboard = () => (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard - MK Training</h1>
-          <p className="text-gray-600 dark:text-gray-400">Visão geral dos negócios</p>
+  // =============================================
+  // TOAST COMPONENT
+  // =============================================
+  const ToastComponent = () => {
+    if (!toast) return null;
+
+    return (
+      <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg ${
+        toast.type === 'success' ? 'bg-green-500' :
+        toast.type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+      } text-white`}>
+        <div className="flex items-center justify-between">
+          <span>{toast.message}</span>
+          <button onClick={hideToast} className="ml-4 text-white hover:text-gray-200">
+            ×
+          </button>
         </div>
       </div>
+    );
+  };
 
-      {/* Métricas principais */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Alunas Ativas</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">4</p>
-            </div>
-            <div className={`p-3 rounded-lg bg-rose-100`}>
-              <Users className={`h-6 w-6 text-rose-400`} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Novos Planos</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">4</p>
-            </div>
-            <div className={`p-3 rounded-lg bg-rose-100`}>
-              <Target className={`h-6 w-6 text-rose-400`} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Performance Geral</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">100.0%</p>
-            </div>
-            <div className={`p-3 rounded-lg bg-rose-100`}>
-              <TrendingUp className={`h-6 w-6 text-rose-400`} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Alunas e Rendimento por Tipo de Serviço */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Planilha</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">2 alunas</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">R$ 120,00</p>
-          <div className="mt-2 text-sm text-green-600">R$ 80,00 este mês</div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Online</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">1 aluna</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">R$ 195,00</p>
-          <div className="mt-2 text-sm text-green-600">R$ 195,00 este mês</div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Presencial</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">1 aluna</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">R$ 195,00</p>
-          <div className="mt-2 text-sm text-green-600">R$ 195,00 este mês</div>
-        </div>
-      </div>
-
-      {/* Gráficos */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Evolução da Receita</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={revenueData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="planilha" stroke="#ec4899" strokeWidth={2} />
-              <Line type="monotone" dataKey="online" stroke="#8b5cf6" strokeWidth={2} />
-              <Line type="monotone" dataKey="presencial" stroke="#06b6d4" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Distribuição por Serviço</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                dataKey="value"
-                label={({ name, value }) => `${name}: ${value}%`}
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Alunas Recentes */}
-      <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Alunas Mensais</h3>
-        <div className="space-y-3">
-          {students.slice(0, 3).map((student) => (
-            <div key={student.id} className="flex items-center space-x-3">
-              <img src={student.photo} alt={student.name} className="w-10 h-10 rounded-full" />
-              <div className="flex-1">
-                <p className="font-medium text-gray-900 dark:text-white">{student.name}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{student.email}</p>
-              </div>
-              <span className={`px-2 py-1 text-xs rounded-full bg-rose-100 text-rose-400`}>
-                Online
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+  // =============================================
+  // LOADING COMPONENT
+  // =============================================
+  const LoadingSpinner = () => (
+    <div className="flex items-center justify-center p-8">
+      <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
+      <span className="ml-2 text-gray-600">Carregando...</span>
     </div>
   );
 
-  // Students Component
-  const Students = () => {
-    const filteredStudents = students.filter(student =>
-      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.email.toLowerCase().includes(searchTerm.toLowerCase())
+  // =============================================
+  // DASHBOARD COMPONENT
+  // =============================================
+  const Dashboard = () => {
+    const { data: metrics, loading: metricsLoading } = useDashboardMetrics();
+    const { data: revenueData, loading: revenueLoading } = useRevenueEvolution();
+    const { data: serviceData, loading: serviceLoading } = useServiceDistribution();
+    const { students: recentStudents, loading: studentsLoading } = useStudents();
+
+    if (metricsLoading) return <LoadingSpinner />;
+
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard - MK Training</h1>
+            <p className="text-gray-600 dark:text-gray-400">Visão geral dos negócios</p>
+          </div>
+        </div>
+
+        {/* Métricas principais */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Alunas Ativas</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {metrics?.activeStudents || 0}
+                </p>
+              </div>
+              <div className={`p-3 rounded-lg bg-rose-100`}>
+                <Users className={`h-6 w-6 text-rose-400`} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Novas este Mês</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {metrics?.newStudentsThisMonth || 0}
+                </p>
+              </div>
+              <div className={`p-3 rounded-lg bg-rose-100`}>
+                <Target className={`h-6 w-6 text-rose-400`} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Receita Mensal</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  R$ {metrics?.monthlyRevenue?.toFixed(2) || '0,00'}
+                </p>
+              </div>
+              <div className={`p-3 rounded-lg bg-rose-100`}>
+                <TrendingUp className={`h-6 w-6 text-rose-400`} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Gráficos */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Evolução da Receita</h3>
+            {revenueLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={revenueData || []}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="planilha" stroke="#ec4899" strokeWidth={2} />
+                  <Line type="monotone" dataKey="online" stroke="#8b5cf6" strokeWidth={2} />
+                  <Line type="monotone" dataKey="presencial" stroke="#06b6d4" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+
+          <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Distribuição por Serviço</h3>
+            {serviceLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={serviceData || []}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    dataKey="value"
+                    label={({ name, value }) => `${name}: ${value}%`}
+                  >
+                    {(serviceData || []).map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </div>
+
+        {/* Alunas Recentes */}
+        <div className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Alunas Recentes</h3>
+          {studentsLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <div className="space-y-3">
+              {recentStudents.slice(0, 3).map((student) => (
+                <div key={student.id} className="flex items-center space-x-3">
+                  <img 
+                    src={student.photo || `https://ui-avatars.com/api/?name=${student.name}&background=random`} 
+                    alt={student.name} 
+                    className="w-10 h-10 rounded-full" 
+                  />
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900 dark:text-white">{student.name}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{student.email}</p>
+                  </div>
+                  <span className={`px-2 py-1 text-xs rounded-full bg-rose-100 text-rose-400`}>
+                    {student.service_type}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     );
+  };
+
+  // =============================================
+  // STUDENTS COMPONENT
+  // =============================================
+  const Students = () => {
+    const { students, loading, error, searchTerm, setSearchTerm, refetch } = useStudents();
+    const { updateStudent, deleteStudent, loading: actionLoading } = useStudentActions();
+
+    const handleToggleActive = async (student: any) => {
+      try {
+        await updateStudent(student.id, { active: !student.active });
+        showToast(`Aluna ${student.active ? 'desativada' : 'ativada'} com sucesso!`, 'success');
+        refetch();
+      } catch (error) {
+        showToast('Erro ao atualizar status da aluna', 'error');
+      }
+    };
+
+    const handleDeleteStudent = async (studentId: string, studentName: string) => {
+      if (!window.confirm(`Tem certeza que deseja deletar a aluna ${studentName}?`)) {
+        return;
+      }
+
+      try {
+        await deleteStudent(studentId);
+        showToast('Aluna deletada com sucesso!', 'success');
+        refetch();
+      } catch (error) {
+        showToast('Erro ao deletar aluna', 'error');
+      }
+    };
+
+    if (loading) return <LoadingSpinner />;
+
+    if (error) {
+      return (
+        <div className="text-center py-12">
+          <p className="text-red-600 mb-4">Erro ao carregar alunas: {error}</p>
+          <button 
+            onClick={refetch}
+            className="bg-rose-500 text-white px-4 py-2 rounded-lg hover:bg-rose-600"
+          >
+            Tentar Novamente
+          </button>
+        </div>
+      );
+    }
 
     return (
       <div className="space-y-6">
@@ -424,27 +343,47 @@ export default function PersonalTrainerApp() {
 
         {/* Students Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredStudents.map((student) => (
+          {students.map((student) => (
             <div key={student.id} className="bg-white dark:bg-slate-600 p-6 rounded-lg shadow">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <img src={student.photo} alt={student.name} className="w-12 h-12 rounded-full" />
+                  <img 
+                    src={student.photo || `https://ui-avatars.com/api/?name=${student.name}&background=random`} 
+                    alt={student.name} 
+                    className="w-12 h-12 rounded-full" 
+                  />
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">{student.name} ({student.age} anos)</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                      {student.name} {student.age && `(${student.age} anos)`}
+                    </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">{student.email}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{student.phone}</p>
+                    {student.phone && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{student.phone}</p>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button className={`p-2 hover:bg-rose-50 rounded`}>
                     <Edit className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                   </button>
-                  <button className="p-2 hover:bg-red-50 rounded">
+                  <button 
+                    onClick={() => handleDeleteStudent(student.id, student.name)}
+                    className="p-2 hover:bg-red-50 rounded"
+                    disabled={actionLoading}
+                  >
                     <Trash2 className="h-4 w-4 text-red-600" />
                   </button>
-                  <div className={`w-10 h-6 bg-${student.active ? 'green-500' : 'gray-300'} rounded-full relative`}>
-                    <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all ${student.active ? 'right-1' : 'left-1'}`}></div>
-                  </div>
+                  <button 
+                    onClick={() => handleToggleActive(student)}
+                    disabled={actionLoading}
+                    className={`w-10 h-6 rounded-full relative transition-colors ${
+                      student.active ? 'bg-green-500' : 'bg-gray-300'
+                    }`}
+                  >
+                    <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all ${
+                      student.active ? 'right-1' : 'left-1'
+                    }`}></div>
+                  </button>
                 </div>
               </div>
 
@@ -458,54 +397,79 @@ export default function PersonalTrainerApp() {
                 }`}>
                   {student.level}
                 </span>
-                <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Planilha</span>
-                <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Padrão</span>
+                <span className={`px-2 py-1 text-xs rounded-full ${
+                  student.service_type === 'Planilha' ? 'bg-blue-100 text-blue-800' :
+                  student.service_type === 'Online' ? 'bg-indigo-100 text-indigo-800' :
+                  'bg-purple-100 text-purple-800'
+                }`}>
+                  {student.service_type}
+                </span>
+                <span className={`px-2 py-1 text-xs rounded-full ${
+                  student.payment_status === 'Em dia' ? 'bg-green-100 text-green-800' :
+                  student.payment_status === 'Pendente' ? 'bg-yellow-100 text-yellow-800' :
+                  'bg-red-100 text-red-800'
+                }`}>
+                  {student.payment_status}
+                </span>
               </div>
 
               {/* Physical data */}
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Peso</p>
-                  <p className="font-semibold text-gray-900 dark:text-white">{student.weight} kg</p>
+              {(student.weight || student.height || student.imc) && (
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  {student.weight && (
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Peso</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">{student.weight} kg</p>
+                    </div>
+                  )}
+                  {student.height && (
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Altura</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">{student.height} cm</p>
+                    </div>
+                  )}
+                  {student.imc && (
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">IMC</p>
+                      <p className="font-semibold text-green-600">
+                        {student.imc} ({student.imc_status})
+                      </p>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Altura</p>
-                  <p className="font-semibold text-gray-900 dark:text-white">{student.height} cm</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">IMC</p>
-                  <p className="font-semibold text-green-600">{student.imc} ({student.imcStatus})</p>
-                </div>
-              </div>
+              )}
 
               {/* Goals */}
-              <div className="mb-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Objetivos:</p>
-                <div className="flex flex-wrap gap-1">
-                  {student.goals.map((goal, index) => (
-                    <span key={index} className={`px-2 py-1 text-xs rounded-full bg-rose-100 text-rose-400`}>
-                      {goal}
-                    </span>
-                  ))}
+              {student.goals && student.goals.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Objetivos:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {student.goals.map((goal, index) => (
+                      <span key={index} className={`px-2 py-1 text-xs rounded-full bg-rose-100 text-rose-400`}>
+                        {goal}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Observations */}
-              <div className="mb-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Observações:</p>
-                <p className="text-sm text-gray-900 dark:text-white">{student.observations}</p>
-              </div>
-
-              {/* Workouts */}
-              <div className="mb-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Treinos:</p>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-900 dark:text-white">{student.workouts}</span>
-                  <button className="p-1">
-                    <Settings className="h-4 w-4 text-gray-400" />
-                  </button>
+              {student.observations && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Observações:</p>
+                  <p className="text-sm text-gray-900 dark:text-white">{student.observations}</p>
                 </div>
-              </div>
+              )}
+
+              {/* Monthly Fee */}
+              {student.monthly_fee && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Mensalidade:</p>
+                  <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                    R$ {student.monthly_fee.toFixed(2)}
+                  </p>
+                </div>
+              )}
 
               {/* Action button */}
               <button className={`w-full bg-gradient-to-r from-rose-400 to-purple-500 text-white py-2 rounded-lg hover:opacity-90`}>
@@ -514,11 +478,30 @@ export default function PersonalTrainerApp() {
             </div>
           ))}
         </div>
+
+        {/* Empty state */}
+        {students.length === 0 && (
+          <div className="text-center py-12">
+            <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              Nenhuma aluna encontrada
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              {searchTerm ? 'Tente outro termo de busca' : 'Comece adicionando sua primeira aluna'}
+            </p>
+            <button className="bg-rose-500 text-white px-4 py-2 rounded-lg hover:bg-rose-600">
+              <Plus className="h-4 w-4 inline mr-2" />
+              Adicionar Aluna
+            </button>
+          </div>
+        )}
       </div>
     );
   };
 
-  // Placeholder components for other pages
+  // =============================================
+  // PLACEHOLDER COMPONENTS
+  // =============================================
   const PlaceholderPage = ({ title, description }: { title: string; description: string }) => (
     <div className="space-y-6">
       <div>
@@ -535,7 +518,9 @@ export default function PersonalTrainerApp() {
     </div>
   );
 
-  // Render current page
+  // =============================================
+  // RENDER CURRENT PAGE
+  // =============================================
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 'dashboard':
@@ -565,6 +550,8 @@ export default function PersonalTrainerApp() {
 
   return (
     <div className={`min-h-screen ${darkMode ? 'dark bg-slate-800' : 'bg-slate-200'}`}>
+      <ToastComponent />
+      
       <div className="flex">
         {/* Sidebar */}
         <div className={`w-64 min-h-screen ${darkMode ? 'bg-slate-600' : 'bg-slate-100'} p-6 hidden md:block`}>
@@ -628,7 +615,7 @@ export default function PersonalTrainerApp() {
                 </button>
                 <div className="flex items-center space-x-2">
                   <img 
-                    src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" 
+                    src="https://ui-avatars.com/api/?name=Mayara+Kerr&background=ec4899&color=fff" 
                     alt="Profile" 
                     className="w-8 h-8 rounded-full"
                   />
