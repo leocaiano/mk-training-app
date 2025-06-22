@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { Users, Plus, Search, Dumbbell, Scale, Edit, Trash2, Phone, Mail, Target, Calendar } from 'lucide-react';
 import { useStudents } from './hooks/useSupabase';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { UserMenu } from './components/AuthComponents';
 import StudentModal from './components/StudentModal';
 import ExercisesPage from './components/ExercisesPage';
 import AssessmentPage from './components/AssessmentPage';
@@ -89,71 +91,163 @@ export default function Home() {
     }
   };
 
+  // Render different pages based on active tab
   if (activeTab === 'exercises') {
-    return <ExercisesPage />;
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Header with User Menu */}
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">MK Training</h1>
+                <p className="text-gray-600 mt-2">Sistema de Gerenciamento de Personal Trainer</p>
+              </div>
+              <UserMenu />
+            </div>
+
+            {/* Navigation */}
+            <div className="border-b border-gray-200 mb-8">
+              <nav className="-mb-px flex space-x-8">
+                <button
+                  onClick={() => setActiveTab('dashboard')}
+                  className="py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm"
+                >
+                  <Users className="w-4 h-4 inline mr-2" />
+                  Alunas
+                </button>
+                <button
+                  onClick={() => setActiveTab('exercises')}
+                  className="py-2 px-1 border-b-2 border-blue-500 text-blue-600 font-medium text-sm"
+                >
+                  <Dumbbell className="w-4 h-4 inline mr-2" />
+                  Exercícios
+                </button>
+                <button
+                  onClick={() => setActiveTab('assessments')}
+                  disabled={!selectedStudentId}
+                  className={`py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm ${!selectedStudentId ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  <Scale className="w-4 h-4 inline mr-2" />
+                  Avaliações
+                  {!selectedStudentId && <span className="text-xs ml-1">(selecione uma aluna)</span>}
+                </button>
+              </nav>
+            </div>
+
+            <ExercisesPage />
+          </div>
+        </div>
+      </ProtectedRoute>
+    );
   }
 
   if (activeTab === 'assessments' && selectedStudentId && selectedStudent) {
     return (
-      <AssessmentPage 
-        selectedStudentId={selectedStudentId} 
-        selectedStudentName={selectedStudent.name}
-      />
+      <ProtectedRoute>
+        <div className="min-h-screen bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Header with User Menu */}
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">MK Training</h1>
+                <p className="text-gray-600 mt-2">Sistema de Gerenciamento de Personal Trainer</p>
+              </div>
+              <UserMenu />
+            </div>
+
+            {/* Navigation */}
+            <div className="border-b border-gray-200 mb-8">
+              <nav className="-mb-px flex space-x-8">
+                <button
+                  onClick={() => setActiveTab('dashboard')}
+                  className="py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm"
+                >
+                  <Users className="w-4 h-4 inline mr-2" />
+                  Alunas
+                </button>
+                <button
+                  onClick={() => setActiveTab('exercises')}
+                  className="py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm"
+                >
+                  <Dumbbell className="w-4 h-4 inline mr-2" />
+                  Exercícios
+                </button>
+                <button
+                  onClick={() => setActiveTab('assessments')}
+                  className="py-2 px-1 border-b-2 border-blue-500 text-blue-600 font-medium text-sm"
+                >
+                  <Scale className="w-4 h-4 inline mr-2" />
+                  Avaliações
+                </button>
+              </nav>
+            </div>
+
+            <AssessmentPage 
+              selectedStudentId={selectedStudentId} 
+              selectedStudentName={selectedStudent.name}
+            />
+          </div>
+        </div>
+      </ProtectedRoute>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">MK Training</h1>
-          <p className="text-gray-600 mt-2">Sistema de Gerenciamento de Personal Trainer</p>
-        </div>
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header with User Menu */}
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">MK Training</h1>
+              <p className="text-gray-600 mt-2">Sistema de Gerenciamento de Personal Trainer</p>
+            </div>
+            <UserMenu />
+          </div>
 
-        {/* Navigation Tabs */}
-        <div className="border-b border-gray-200 mb-8">
-          <nav className="-mb-px flex space-x-8">
-            <button
-              onClick={() => setActiveTab('dashboard')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'dashboard'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <Users className="w-4 h-4 inline mr-2" />
-              Alunas
-            </button>
-            <button
-              onClick={() => setActiveTab('exercises')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'exercises'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <Dumbbell className="w-4 h-4 inline mr-2" />
-              Exercícios
-            </button>
-            <button
-              onClick={() => setActiveTab('assessments')}
-              disabled={!selectedStudentId}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'assessments' && selectedStudentId
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } ${!selectedStudentId ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              <Scale className="w-4 h-4 inline mr-2" />
-              Avaliações
-              {!selectedStudentId && <span className="text-xs ml-1">(selecione uma aluna)</span>}
-            </button>
-          </nav>
-        </div>
+          {/* Navigation Tabs */}
+          <div className="border-b border-gray-200 mb-8">
+            <nav className="-mb-px flex space-x-8">
+              <button
+                onClick={() => setActiveTab('dashboard')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'dashboard'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <Users className="w-4 h-4 inline mr-2" />
+                Alunas
+              </button>
+              <button
+                onClick={() => setActiveTab('exercises')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'exercises'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <Dumbbell className="w-4 h-4 inline mr-2" />
+                Exercícios
+              </button>
+              <button
+                onClick={() => setActiveTab('assessments')}
+                disabled={!selectedStudentId}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'assessments' && selectedStudentId
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } ${!selectedStudentId ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                <Scale className="w-4 h-4 inline mr-2" />
+                Avaliações
+                {!selectedStudentId && <span className="text-xs ml-1">(selecione uma aluna)</span>}
+              </button>
+            </nav>
+          </div>
 
-        {/* Dashboard Content */}
-        {activeTab === 'dashboard' && (
+          {/* Dashboard Content */}
           <>
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -384,17 +478,17 @@ export default function Home() {
               </div>
             )}
           </>
-        )}
 
-        {/* Student Modal */}
-        <StudentModal
-          isOpen={showModal}
-          onClose={closeModal}
-          onSave={editingStudent ? handleUpdateStudent : handleCreateStudent}
-          student={editingStudent}
-          title={editingStudent ? 'Editar Aluna' : 'Nova Aluna'}
-        />
+          {/* Student Modal */}
+          <StudentModal
+            isOpen={showModal}
+            onClose={closeModal}
+            onSave={editingStudent ? handleUpdateStudent : handleCreateStudent}
+            student={editingStudent}
+            title={editingStudent ? 'Editar Aluna' : 'Nova Aluna'}
+          />
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }
