@@ -19,6 +19,11 @@ import {
   useToast 
 } from '../hooks/useSupabase';
 
+// Importar os componentes criados
+import StudentModal from '../components/StudentModal';
+import ExercisesPage from '../components/ExercisesPage';
+import AssessmentPage from '../components/AssessmentPage';
+
 export default function PersonalTrainerApp() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [darkMode, setDarkMode] = useState(false);
