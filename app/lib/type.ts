@@ -78,22 +78,3 @@ export interface ProgressPhoto {
 export type StudentFormData = Omit<Student, 'id' | 'created_at' | 'updated_at' | 'user_id'>;
 export type ExerciseFormData = Omit<Exercise, 'id' | 'created_at' | 'user_id'>;
 export type AssessmentFormData = Omit<Assessment, 'id' | 'created_at'>;
-
-// User types para autenticação
-export interface AuthUser {
-  id: string;
-  email?: string;
-  user_metadata?: {
-    name?: string;
-    [key: string]: any;
-  };
-}
-
-export interface AuthContextType {
-  user: AuthUser | null;
-  loading: boolean;
-  signUp: (email: string, password: string, metadata?: any) => Promise<{ user: AuthUser | null; error: any }>;
-  signIn: (email: string, password: string) => Promise<{ user: AuthUser | null; error: any }>;
-  signOut: () => Promise<{ error: any }>;
-  resetPassword: (email: string) => Promise<{ error: any }>;
-}
